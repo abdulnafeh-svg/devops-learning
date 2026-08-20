@@ -58,3 +58,14 @@ jobs:
         if: github.event_name == 'push'
         run: |
           docker push ghcr.io/${{ github.repository }}:latest
+      - name: Deploy production container
+        if: github.event_name == 'push'
+        run: |
+          docker pull ghcr.io/${{ github.repository }}:latest
+          docker rm -f devops-production || true
+          docker run -d \
+            --name devops-production \
+            -p 5001:5000 \
+            ghcr.io/${{ github.repository }}:latest
+          sleep 5
+          curl --fail http://localhost:5001
