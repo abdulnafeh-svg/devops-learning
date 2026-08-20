@@ -1,4 +1,4 @@
-Xname: DevOps CI/CD
+name: DevOps CI/CD
 
 on:
   push:
