@@ -58,14 +58,16 @@ jobs:
         if: github.event_name == 'push'
         run: |
           docker push ghcr.io/${{ github.repository }}:latest
-      - name: Deploy production container
+
+      - name: Deploy production with Docker Compose
         if: github.event_name == 'push'
         run: |
-          docker pull ghcr.io/${{ github.repository }}:latest
-          docker rm -f devops-production || true
-          docker run -d \
-            --name devops-production \
-            -p 5001:5000 \
-            ghcr.io/${{ github.repository }}:latest
+          docker compose pull
+          docker compose up -d --force-recreate
+
+      - name: Verify production deployment
+        if: github.event_name == 'push'
+        run: |
           sleep 5
+          docker compose ps
           curl --fail http://localhost:5001
