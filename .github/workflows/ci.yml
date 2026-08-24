@@ -22,6 +22,8 @@ jobs:
 
       - name: Build Docker image
         run: docker build -t devops-learning:test .
+- name: Run automated tests
+  run: docker run --rm devops-learning:test pytest -q
 
       - name: Run Docker container
         run: |
